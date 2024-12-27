@@ -2,6 +2,7 @@ package com.kh;
 
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,9 +15,22 @@ import jakarta.websocket.Session;
 
 @Controller
 public class MainController {
+	// 역주입 방법 1
+//	@Autowired
+//	private RegisterService service;
+	// 역주입 방법 2
+	private RegisterService service;
+	private ComponentClass component;
+
+	public MainController(RegisterService service, ComponentClass component) {
+		this.service = service;
+		this.component = component;
+	}
 
 	@GetMapping(path = { "/", "/loginView.do" })
 	public String loginView() {
+		service.serviceTest();
+		component.componentTest();
 		return "login";
 	}
 
@@ -65,6 +79,12 @@ public class MainController {
 		view.addObject("msg", "안녕하세요 - request 영역");
 		view.setViewName("register_result");
 		return view;
+	}
+	
+	//redirect로 이동하는 방법
+	@GetMapping("/main")
+	public String main() {
+		return "redirect:/loginView.do";
 	}
 
 }
