@@ -12,6 +12,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kh.dto.BoardMemberDTO;
 import com.kh.service.BoardMemberService;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestParam;
+
 @Controller
 public class MainController {
 	private BoardMemberService service;
@@ -26,19 +29,29 @@ public class MainController {
 		return view;
 	}
 
+	@PostMapping("/login")
+	public String login(String id, String password, HttpSession session) {
+		BoardMemberDTO member = service.login(id, password);
+		System.out.println(member);
+		if (member == null) {
+			return "redirect:/";
+		}
+		session.setAttribute("member", member);
+		return "redirect:/members";
+
+	}
+
 	@GetMapping("/members")
 	public ModelAndView allMembers(ModelAndView view) {
-		// 전체 회원 정보 받아옴
 		List<BoardMemberDTO> list = service.selectAllMember();
 		view.addObject("list", list);
-		view.setViewName("member_list");
+		view.setViewName("main");
 		return view;
-
 	}
 
 	@GetMapping("/member/register/view")
 	public String registerView() {
-		return "member_insert_view";
+		return "register";
 	}
 
 	@PostMapping("/member/register")
@@ -53,14 +66,14 @@ public class MainController {
 	public String deleteMember(@PathVariable String id) {
 		System.out.println("삭제할 아이디 : " + id);
 		int count = service.deleteMember(id);
-		if(count == 0) {
+		if (count == 0) {
 			System.out.println("데이터 삭제 실패");
-		}else {
+		} else {
 			System.out.println("데이터 삭제 성공");
 		}
 		return "redirect:/members";
 	}
-	
+
 	@GetMapping("/member/{id}")
 	public ModelAndView updateView(@PathVariable String id, ModelAndView view) {
 		BoardMemberDTO member = service.selectMember(id);
@@ -68,7 +81,7 @@ public class MainController {
 		view.setViewName("member_update_view");
 		return view;
 	}
-	
+
 	@PostMapping("/member/update")
 	public String updateMember(BoardMemberDTO member) {
 		System.out.println(member);

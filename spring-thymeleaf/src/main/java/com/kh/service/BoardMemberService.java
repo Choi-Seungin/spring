@@ -1,5 +1,6 @@
 package com.kh.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,13 @@ public class BoardMemberService {
 
 	public int updateMember(BoardMemberDTO member) {
 		return mapper.updateMember(member);
+	}
+
+	public BoardMemberDTO login(String id, String password) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", id);
+		map.put("password", password);
+		return mapper.login(map);
 	}
 
 }
