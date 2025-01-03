@@ -44,4 +44,8 @@ public class BoardMemberService {
 		return mapper.login(map);
 	}
 
+	public int chkId(String id) {
+		return mapper.chkId(id);
+	}
+
 }

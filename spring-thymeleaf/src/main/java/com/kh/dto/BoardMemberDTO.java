@@ -8,15 +8,17 @@ public class BoardMemberDTO {
 	private String password;
 	private String userName;
 	private String nickName;
+	private int grade;
 
 	public BoardMemberDTO() {
 	}
 
-	public BoardMemberDTO(String id, String password, String userName, String nickName) {
+	public BoardMemberDTO(String id, String password, String userName, String nickName, int grade) {
 		this.id = id;
 		this.password = password;
 		this.userName = userName;
 		this.nickName = nickName;
+		this.grade = grade;
 	}
 
 	public String getId() {
@@ -51,10 +53,18 @@ public class BoardMemberDTO {
 		this.nickName = nickName;
 	}
 
+	public int getGrade() {
+		return grade;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+
 	@Override
 	public String toString() {
 		return "BoardMemberDTO [id=" + id + ", password=" + password + ", userName=" + userName + ", nickName="
-				+ nickName + "]";
+				+ nickName + ", grade=" + grade + "]";
 	}
 
 }

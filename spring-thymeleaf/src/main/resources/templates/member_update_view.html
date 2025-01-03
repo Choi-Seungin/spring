@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>회원가입</title>
+    <title>회원정보 수정</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,62 +44,42 @@
         .form-group button:hover {
             background-color: #218838;
         }
-        .true{
-        	color:blue;
-        	font-weight: bold;
-        }
-        .false{
-        	color:red;
-        	font-weight: bold;
-        }
     </style>
-    <script>
-    	window.onload = () => {
-    		 document.querySelector('.btn_chk_id').onclick = () => {
-    			 const id = document.querySelector('#userId').value;
-    			 const url = `/member/register/${id}`;
-    			 fetch(url).then(response => response.json())
-    			 .then(result => {
-    				const id_chk_result = document.querySelector('.id_chk_result');
-    				console.log(result.status);
-    				if(result.status == 0){
-    					id_chk_result.innerHTML = '사용가능한 아이디 입니다.'
-    					id_chk_result.classList.add('true');
-    					id_chk_result.classList.remove('false');
-    				} else{
-    					id_chk_result.innerHTML = '중복된 아이디 입니다.'
-    					id_chk_result.classList.add('false');
-    					id_chk_result.classList.remove('true');
-    				}
-    			 });
-    		 }
-    	}
-    </script>
 </head>
 <body>
     <div class="form-container">
-        <h1>회원가입</h1>
-        <form action="/member/register" method="post">
+        <h1>회원정보 수정</h1>
+        <form action="/member/update" method="post">
             <div class="form-group">
                 <label for="userId">아이디</label>
-                <input type="text" id="userId" name="id" required>
-                <button type="button" class="btn_chk_id">중복 확인</button>
-                <div class="id_chk_result"></div>
+                <input type="text" id="userId" name="id" th:value="${member.id}" readonly>
             </div>
             <div class="form-group">
                 <label for="password">암호</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password">
             </div>
             <div class="form-group">
                 <label for="name">이름</label>
-                <input type="text" id="name" name="userName" required>
+                <input type="text" id="name" name="userName" th:value="${member.userName }">
             </div>
             <div class="form-group">
                 <label for="nickname">닉네임</label>
-                <input type="text" id="nickname" name="nickName" required>
+                <input type="text" id="nickname" name="nickName" th:value="${member.nickName }">
             </div>
             <div class="form-group">
-                <button type="submit">회원등록</button>
+            	<label for="grade">등급</label>
+            	<select id="grade" name="grade" th:attr="disabled=${session.member.grade < 5}">
+            		<option value="0" th:selected="${member.grade == 0}">Bronze</option>
+            		<option value="1" th:selected="${member.grade == 1}">Silver</option>
+            		<option value="2" th:selected="${member.grade == 2}">Gold</option>
+            		<option value="3" th:selected="${member.grade == 3}">VIP</option>
+            		<option value="4" th:selected="${member.grade == 4}">VVIP</option>
+            		<option value="5" th:selected="${member.grade == 5}">admin</option>
+            	</select>
+            </div>
+            <div class="form-group">
+                <button type="submit">수정</button><br>
+                <button type="button" onclick="history.back()">취소</button>
             </div>
         </form>
     </div>

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.dto.BoardMemberDTO;
 import com.kh.service.BoardMemberService;
@@ -41,6 +42,12 @@ public class MainController {
 
 	}
 
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/";
+	}
+
 	@GetMapping("/members")
 	public ModelAndView allMembers(ModelAndView view) {
 		List<BoardMemberDTO> list = service.selectAllMember();
@@ -58,7 +65,7 @@ public class MainController {
 	public String memberRegister(BoardMemberDTO member) {
 		System.out.println(member);
 		service.insertMember(member);
-		return "redirect:/members";
+		return "redirect:/";
 	}
 
 	@GetMapping("/member/delete/{id}")

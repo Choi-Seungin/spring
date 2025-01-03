@@ -20,10 +20,21 @@
   	select * from board_member where id like #{id}
   </select>
   <update id="updateMember" parameterType="member">
-  	update board_member set password = standard_hash(#{password},'SHA512'), username = #{userName}, nickname = #{nickName} where id like #{id}
+  	update board_member
+  	<set> 
+  		<if test="!password.isEmpty()">
+  			password = standard_hash(#{password},'SHA512'),
+  		</if> 
+  	username = #{userName}, 
+  	nickname = #{nickName} 
+  	</set>
+  	where id like #{id}
   </update>
   <select id="login" parameterType="map" resultType="member">
   	select * from board_member where id = #{id} and password = standard_hash(#{password},'SHA512')
+  </select>
+  <select id="chkId" parameterType="String" resultType="int">
+  	select count(*) from board_member where id = #{id}
   </select>
 </mapper>
 

@@ -35,6 +35,15 @@
 	<ul>
 		<li><a href="/members">홈</a></li>
 		<li><a href="/member/register/view">회원등록</a></li>
-		<li>[[${session.member.userName}]]님 로그인/<a href="/logout">로그아웃</a></li>
+		<li th:if="${session.member != null}">[[${session.member.userName}]]님 로그인/<a href="/logout">로그아웃</a></li>
 	</ul>
 </nav>
+<hr>
+<th:block th:if="${session.member == null}">
+	<script>
+		alert("로그인 하셔야 이용할 수 있습니다.");
+		location.href="/";
+	</script>
+</th:block>
+
+
