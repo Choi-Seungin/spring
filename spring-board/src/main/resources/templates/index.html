@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>메인</title>
+<style>
+/* Global Styles */
+body {
+	font-family: Arial, sans-serif;
+	background-color: #ffffff;
+}
+
+/* Login Message Styles */
+p {
+	font-size: 18px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+/* Table Styles */
+h3 {
+	text-align: center;
+}
+
+table {
+	width: 70%;
+	margin: 0 auto;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+th, td {
+	border: 1px solid #eeeeee;
+	padding: 5px;
+	text-align: center;
+}
+
+th {
+	background-color: #f7f7f7;
+}
+
+/* Link Styles */
+a {
+	text-decoration: none;
+	color: #999999;
+}
+
+a:hover {
+	color: #bbbbbb;
+}
+
+/* Button Styles */
+.btn {
+	background-color: #eeeeee;
+	color: #999999;
+	padding: 5px 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 12px;
+	line-height: 1;
+}
+
+.btn:hover {
+	background-color: #f7f7f7;
+}
+</style>
+</head>
+<body>
+	<th:block th:include="/fragments/header.html"></th:block>
+	<!-- 전체 회원 목록 출력 -->
+	<div class="container">
+		<h3>게시판</h3>
+		<table>
+			<thead>
+				<th>글번호</th>
+				<th>닉네임</th>
+				<th>제목</th>
+				<th>작성일</th>
+				<th>조회수</th>
+				<th>좋아요</th>
+				<th>싫어요</th>
+			</thead>
+			<tbody>
+				<tr th:each="board : ${list}">
+					<td>[[${board.bno}]]</td>
+					<td>[[${board.nickName}]]</td>
+					<td><a th:href="@{/board/{bno}(bno=${board.bno})}">[[${board.title}]]</a></td>
+					<td>[[${board.writeDate}]]</td>
+					<td>[[${board.bcount}]]</td>
+					<td>[[${board.blike}]]</td>
+					<td>[[${board.bhate}]]</td>
+				</tr>
+			</tbody>
+			<tfoot>
+			    <tr>
+			        <td colspan="7">
+			            <div class="pagination">
+			                <!-- 이전 페이지 그룹 버튼 -->
+			                
+			                <!-- 페이지 번호 반복 -->
+            				<a th:href="@{/main(pageNo=${i},pageContentEa=${pagging.pageContentEa})}" th:each="i : ${#numbers.sequence(pagging.startPageOfPageGroup,pagging.endPageOfPageGroup)}">[[${i}]]</a>
+			                <!-- 다음 페이지 그룹 버튼 -->
+			            </div>
+			        </td>
+			    </tr>
+			</tfoot>
+		</table>
+	</div>
+</body>
+</html>

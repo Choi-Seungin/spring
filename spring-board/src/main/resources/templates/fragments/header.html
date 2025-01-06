@@ -1,0 +1,42 @@
+<style>
+.menubar {
+	background-color: #f7f7f7;
+	padding: 10px;
+	text-align: center;
+}
+
+.menubar ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.menubar li {
+	display: inline-block;
+	margin-right: 40px;
+}
+
+.menubar a {
+	text-decoration: none;
+	color: #999999;
+}
+
+.menubar a:hover {
+	color: #bbbbbb;
+}
+
+.menubar .active {
+	background-color: #eeeeee;
+	padding: 5px 10px;
+	border-radius: 5px;
+}
+</style>
+<nav class="menubar">
+	<ul>
+		<li><a href="/">홈</a></li>
+		<li th:if="${session.user == null}"><a href="/">회원가입</a></li>
+		<li th:if="${session.user == null}"><a href="/">로그인</a></li>
+	</ul>
+</nav>
+
+
