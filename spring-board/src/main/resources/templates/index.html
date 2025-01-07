@@ -98,10 +98,11 @@ a:hover {
 			        <td colspan="7">
 			            <div class="pagination">
 			                <!-- 이전 페이지 그룹 버튼 -->
-			                
+			                <a th:if="${pagging.priviousPageGroup}" th:href="@{/main(pageNo=${pagging.startPageOfPageGroup-1}, pageContentEa=${pagging.pageOfContentCount})}">◀</a>
 			                <!-- 페이지 번호 반복 -->
-            				<a th:href="@{/main(pageNo=${i},pageContentEa=${pagging.pageContentEa})}" th:each="i : ${#numbers.sequence(pagging.startPageOfPageGroup,pagging.endPageOfPageGroup)}">[[${i}]]</a>
+            				<a th:href="@{/main(pageNo=${i},pageContentEa=${pagging.pageOfContentCount})}" th:each="i : ${#numbers.sequence(pagging.startPageOfPageGroup,pagging.endPageOfPageGroup)}">[[${i}]]</a>
 			                <!-- 다음 페이지 그룹 버튼 -->
+			                <a th:if="${pagging.nextPageGroup}" th:href="@{/main(pageNo=${pagging.endPageOfPageGroup+1}, pageContentEa=${pagging.pageOfContentCount})}">▶</a>
 			            </div>
 			        </td>
 			    </tr>

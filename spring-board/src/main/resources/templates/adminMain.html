@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>메인</title>
+<style>
+/* Global Styles */
+body {
+	font-family: Arial, sans-serif;
+	background-color: #ffffff;
+}
+
+/* Login Message Styles */
+p {
+	font-size: 18px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+/* Table Styles */
+h3 {
+	text-align: center;
+}
+
+table {
+	width: 60%;
+	margin: 0 auto;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+th, td {
+	border: 1px solid #eeeeee;
+	padding: 5px;
+	text-align: center;
+}
+
+th {
+	background-color: #f7f7f7;
+}
+
+/* Link Styles */
+a {
+	text-decoration: none;
+	color: #999999;
+}
+
+a:hover {
+	color: #bbbbbb;
+}
+
+/* Button Styles */
+.btn {
+	background-color: #eeeeee;
+	color: #999999;
+	padding: 5px 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 12px;
+	line-height: 1;
+}
+
+.btn:hover {
+	background-color: #f7f7f7;
+}
+</style>
+<script>
+    window.onload = () => {
+    	const tbody = document.querySelector('tbody');
+    	 // 부모 요소에 이벤트 리스너를 한 번만 추가
+        tbody.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn_delete')) {
+          //아이디 선택
+            const id = e.target.parentNode.parentNode.querySelector('.id').value;
+            fetch('/member/delete',{
+              method : "DELETE",
+              headers : {
+                "Content-Type" : "application/json"
+              },
+              body : JSON.stringify({id})
+            }).then(response => response.json()).then(result => {
+              console.log(result);
+              let tag = '';
+              result.list.forEach((item) => {
+                tag += `<tr>
+                  <td><input type="text" class="id" readonly value="${item.id}"></td>
+                  <td><input type="text" class="userName" value="${item.userName}"></td>
+                  <td><input type="text" class="nickName" value="${item.nickName}"></td>
+                  <td>
+                    <select name="grade">
+                      <option value="0" ${item.grade == 0 ? 'selected' : ''}>Bronze</option>
+                      <option value="1" ${item.grade == 1 ? 'selected' : ''}>Silver</option>
+                      <option value="2" ${item.grade == 2 ? 'selected' : ''}>Gold</option>
+                      <option value="3" ${item.grade == 3 ? 'selected' : ''}>VIP</option>
+                      <option value="4" ${item.grade == 4 ? 'selected' : ''}>VVIP</option>
+                      <option value="5" ${item.grade == 5 ? 'selected' : ''}>Admin</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn_update">수정</button>
+                    <button class="btn_delete">삭제</button>
+                  </td>
+                </tr>`;
+              });
+              document.querySelector('tbody').innerHTML = tag;
+            })
+          }
+      });
+    }
+
+  </script>
+</head>
+<body>
+	<th:block th:include="/fragments/header.html"></th:block>
+	<!-- 전체 회원 목록 출력 -->
+	<div class="container">
+		<h3>전체 회원 목록</h3>
+		<table>
+			<thead>
+				<tr>
+					<th>아이디</th>
+					<th>회원 이름</th>
+					<th>회원 닉네임</th>
+					<th>회원 등급</th>
+					<th>비고</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="member : ${list}">
+					<td><input type="text" class="id" readonly th:value="${member.id}"></td>
+					<td><input type="text" class="userName" th:value="${member.userName}"></td>
+					<td><input type="text" class="nickName" th:value="${member.nickName}"></td>
+					<td>
+						<select name="grade">
+							<option value="0" th:selected="${member.grade == 0}">Bronze</option>
+							<option value="1" th:selected="${member.grade == 1}">Silver</option>
+							<option value="2" th:selected="${member.grade == 2}">Gold</option>
+							<option value="3" th:selected="${member.grade == 3}">VIP</option>
+							<option value="4" th:selected="${member.grade == 4}">VVIP</option>
+							<option value="5" th:selected="${member.grade == 5}">Admin</option>
+						</select>
+					</td>
+					<td>
+						<button class="btn_update">수정</button>
+						<button class="btn_delete">삭제</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

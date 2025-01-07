@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div>
+	<table>
+		<thead>
+			<tr>
+				<th>글번호</th>
+				<th>작성자</th>
+				<th>제목</th>
+				<th>작성일</th>
+				<th>조회수</th>
+				<th>좋아요</th>
+				<th>싫어요</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="board: ${list}">
+				<td>[[${board.bno}]]</td>			
+				<td>[[${board.nickName}]]</td>			
+				<td>[[${board.title}]]</td>			
+				<td>[[${board.writeDate}]]</td>			
+				<td>[[${board.bcount}]]</td>			
+				<td>[[${board.blike}]]</td>			
+				<td>[[${board.bhate}]]</td>			
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td>
+					<div>
+						<a th:href="@{/main(pageNo=${i})}" th:each="i: ${#numbers.sequence(pagging.startPageOfPageGroup,pagging.endPageOfPageGroup)}">[[${i}]]</a>
+					</div>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+</body>
+</html>

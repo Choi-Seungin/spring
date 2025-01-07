@@ -5,16 +5,26 @@ public class BoardMemberDTO {
 	private String password;
 	private String userName;
 	private String nickName;
+	private int grade;
 
 	public BoardMemberDTO() {
 	}
-	
 
-	public BoardMemberDTO(String id, String password, String userName, String nickName) {
+	public BoardMemberDTO(String id, String password, String userName, String nickName, int grade) {
+		super();
 		this.id = id;
 		this.password = password;
 		this.userName = userName;
 		this.nickName = nickName;
+		this.grade = grade;
+	}
+
+	public int getGrade() {
+		return grade;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
 	}
 
 	public String getId() {
