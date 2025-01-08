@@ -23,5 +23,19 @@
 	<select id="findMemberByIdAndPassword" parameterType="map"
 		resultType="com.kh.dto.BoardMemberDTO">
 		select * from board_member where id like #{id} and password like STANDARD_HASH(#{password},'SHA512')
-	</select>
+	</select >
+	<update id="updateMember" parameterType="map">
+	update board_member
+	set
+	username = #{userName},
+	nickname = #{nickName},
+	grade = #{grade}
+	where id like #{id}
+	</update>
+	<update id="updateColumnMember" parameterType="map">
+	update board_member
+	set
+	${column} = #{value}
+	where id like #{id}
+	</update>
 </mapper>

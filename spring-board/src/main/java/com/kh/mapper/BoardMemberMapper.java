@@ -22,4 +22,8 @@ public interface BoardMemberMapper {
 
 	BoardMemberDTO findMemberByIdAndPassword(Map<String, String> map);
 
+  int updateMember(Map<String,String> map);
+
+  int updateColumnMember(Map<String, String> map);
+
 }
