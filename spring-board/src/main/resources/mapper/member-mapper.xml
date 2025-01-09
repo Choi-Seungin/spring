@@ -9,8 +9,8 @@
 	</select>
 	<insert id="insertMember" parameterType="com.kh.dto.BoardMemberDTO">
 		insert into
-		board_member(id,password,username,nickname)
-		values(#{id},standard_hash(#{password},'SHA512'),#{userName},#{nickName})
+		board_member(id,password,username,nickname,grade)
+		values(#{id},standard_hash(#{password},'SHA512'),#{userName},#{nickName},#{grade})
 	</insert>
 	<select id="selectNameMember" parameterType="string"
 		resultType="com.kh.dto.BoardMemberDTO">

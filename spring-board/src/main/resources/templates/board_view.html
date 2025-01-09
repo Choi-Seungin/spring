@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	/* 기본 스타일 초기화 */
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+	body {
+		font-family: Arial, sans-serif;
+		line-height: 1.6;
+		background-color: #f4f4f4;
+	}
+
+	#container {
+		width: 100%;
+		max-width: 1200px;
+		margin: 40px auto;
+		padding: 20px;
+		background-color: white;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	}
+
+	h2 {
+		text-align: center;
+		font-size: 24px;
+		margin-bottom: 20px;
+		color: #333;
+	}
+
+	/* 테이블 스타일 */
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-bottom: 30px;
+	}
+	th, td {
+		padding: 10px;
+		text-align: left;
+		border-bottom: 1px solid #ddd;
+	}
+	th {
+		width: 150px;
+		background-color: #f8f8f8;
+		font-weight: normal;
+		color: #555;
+	}
+
+	/* 이미지가 콘텐츠를 넘지 않도록 */
+	#container img {
+		max-width: 100%;
+		height: auto;
+		display: block;
+		margin-top: 10px;
+	}
+
+	/* 댓글 작성 폼 */
+	.comment_form {
+		border: 1px solid #ddd;
+		padding: 20px;
+		background-color: #f9f9f9;
+		margin-top: 20px;
+	}
+	.comment_form textarea {
+		width: 100%;
+		height: 80px;
+		padding: 10px;
+		font-size: 16px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		resize: none;
+		outline: none;
+		box-sizing: border-box;
+	}
+	.comment_form button {
+		width: 120px;
+		height: 40px;
+		background-color: #ffcc00;
+		border: none;
+		border-radius: 5px;
+		font-weight: bold;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+	.comment_form button:hover {
+		background-color: #e6b800;
+	}
+
+	/* 댓글 목록 */
+	.comment {
+		margin-top: 20px;
+		padding: 10px;
+		border-bottom: 1px solid #ddd;
+		background-color: #f9f9f9;
+	}
+	.comment .info {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 14px;
+		color: #555;
+	}
+	.comment .info span {
+		margin-right: 10px;
+	}
+	.comment .info a {
+		color: #0099ff;
+		text-decoration: none;
+		font-size: 14px;
+	}
+	.comment .info a:hover {
+		text-decoration: underline;
+	}
+	.comment p {
+		margin-top: 10px;
+		font-size: 16px;
+		color: #333;
+		line-height: 1.4;
+	}
+
+	/* 좋아요, 싫어요 버튼 */
+	.btn_comment_like, .btn_comment_hate {
+		padding: 5px 10px;
+		font-size: 14px;
+		border-radius: 5px;
+		border: 1px solid #ddd;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+	.btn_comment_like {
+		color: #28a745;
+		background-color: #f1f8f1;
+	}
+	.btn_comment_like:hover {
+		background-color: #28a745;
+		color: white;
+	}
+	.btn_comment_hate {
+		color: #dc3545;
+		background-color: #f8f4f4;
+	}
+	.btn_comment_hate:hover {
+		background-color: #dc3545;
+		color: white;
+	}
+
+	/* 버튼들 */
+	.btn {
+		text-decoration: none;
+		background-color: #e8e8e8;
+		padding: 8px 15px;
+		font-weight: normal;
+		border: 1px solid #585858;
+		border-radius: 5px;
+		text-align: center;
+		color: black;
+		font-size: 14px;
+		transition: background-color 0.3s ease;
+	}
+	.btn:hover {
+		background-color: #282828;
+		color: white;
+	}
+
+	/* 목록 버튼 스타일 */
+	#btn_list {
+		display: inline-block;
+		padding: 10px 20px;
+		font-size: 16px;
+		color: #fff;
+		background-color: #007bff;
+		border-radius: 5px;
+		text-align: center;
+		text-decoration: none;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+	#btn_list:hover {
+		background-color: #0056b3;
+	}
+
+	/* hr 줄 스타일 */
+	hr {
+		margin-top: 30px;
+		border: 0;
+		border-top: 1px solid #ddd;
+	}
+
+	/* 반응형 처리 */
+	@media screen and (max-width: 768px) {
+		#container {
+			padding: 15px;
+		}
+		.comment_form textarea {
+			font-size: 14px;
+		}
+		.comment_form button {
+			width: 100px;
+		}
+		.comment p {
+			font-size: 14px;
+		}
+	}
+</style>
+<script>
+	window.onload = () => {
+		//좋아요 링크 클릭 -> 경고창 띄우기
+		document.querySelector('#btn_like').onclick = () => {
+			//alert('좋아요 클릭')
+			fetch('./boardLike.do?bno=${board.boardNo}')
+			.then(response => response.json())
+			.then((result) => {
+				console.log(result);
+				if(result.code == 2){
+					if(confirm(result.msg))	location.href='./index.jsp';
+				}
+				else alert(result.msg);
+				//좋아요 개수 갱신
+				document.querySelector("#like_count").innerHTML = result.count;
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+		}
+		document.querySelector('#btn_hate').onclick = () => {
+			fetch('./boardHate.do?bno=${board.boardNo}')
+			.then(response => response.json())
+			.then((result) => {
+				console.log(result);
+				if(result.code == 2){
+					if(confirm(result.msg))	location.href='./index.jsp';
+				}
+				else alert(result.msg);
+				document.querySelector("#hate_count").innerHTML = result.count;
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+		}
+		//댓글 좋아요
+		document.querySelectorAll('.btn_comment_like, .btn_comment_hate').forEach((item) => {
+			item.onclick = () => {
+				//alert(item.parentNode.parentNode.querySelector('input').value);
+				//console.log(item.parentNode.parentNode.querySelector('input'));
+				//클릭한것이 좋아요? 싫어요? 
+				console.log(item.className);
+				let cno = item.parentNode.parentNode.querySelector('input').value;
+				let count = 0;
+				if(item.className == "btn_comment_like")
+					//좋아요를 눌렀을 때
+					count = commentLikeHateAjax(true,cno);
+				else
+					//싫어요를 눌렀을 때
+					count = commentLikeHateAjax(false,cno);
+				//페이지 새로고침
+				location.reload();
+			}
+		});
+	}
+	function commentLikeHateAjax(mode, cno){
+		let url = `./comment\${mode ? "Like" : "Hate"}.do?cno=\${cno}`;
+		console.log(url);
+		//ajax 호출
+		fetch(url).then(response => response.json())
+		.then(result => {
+			console.log(result);
+		}).catch(error => {
+			console.log(error);
+		});
+	}
+
+</script>
+</head>
+<body>
+<div id="container">
+  <h2>글조회 페이지</h2>
+	<table>
+		<tr>
+			<th>글번호</th>
+			<td>[[${board.bno}]]</td>
+		</tr>
+		<tr>
+			<th>제목 : </th>
+			<td th:text="${board.title }"></td>
+		</tr>
+		<tr>
+			<th>작성자 : </th>
+			<td>[[${board.nickName }]]</td>
+		</tr>
+		<tr>
+			<th>조회수 : </th>
+			<td>[[${board.bcount }]]</td>
+		</tr>
+		<tr>
+			<td colspan="2"> 
+				[(${board.content })]
+			</td>
+			<!-- <td colspan="2" th:utext="${board.content }"> 
+				
+			</td> -->
+		</tr>
+		<tr>
+			<td colspan="2"> 
+				<a href="#" id="btn_like">좋아요 : <span id="like_count">[[${board.blike }]]</span> </a>
+				<a href="#" id="btn_hate">싫어요 : <span id="hate_count">[[${board.bhate }]]</span> </a>
+			</td>
+		</tr>
+		<!-- 
+			해당 글을 쓴 작성자에게만 수정, 삭제 버튼이 나오게끔 처리
+		 -->
+		 <!-- <c:if test="${sessionScope.user.boardMemberId == board.boardMemberId }">
+		 <tr>
+			 <td colspan="2">
+			 	<button id="btn_update">수정</button>
+			 	<button id="btn_delete">삭제</button>
+			 	<script>
+			 		document.querySelector("#btn_update").onclick = () =>{
+			 			location.href='./boardUpdateView.do?bno=${board.boardNo}';
+			 		}
+			 		document.querySelector("#btn_delete").onclick = () =>{
+			 			location.href='./boardDelete.do?bno=${board.boardNo}';
+			 		}
+			 	</script>
+			 </td>
+	 	</tr>
+		 </c:if> -->
+		 
+		 <tr>
+		 	
+		 </tr>
+		 
+		 <tr>
+		 	<td colspan="2">
+		 		<!-- 댓글 입력 폼 -->
+		 		<div class="comment_form">
+					<form action="commentWrite.do" method="post">
+						<input type="hidden" name="bno" value="${board.boardNo }">
+						<textarea name="comment" placeholder="댓글을 입력하세요"></textarea>
+						<button>댓글작성</button>
+					</form>
+				</div>
+		 	</td>
+		 </tr>
+	</table>
+	<hr>
+	<!-- 
+		댓글 내용을 출력, 댓글 번호(hidden), 작성일, 좋아요, 싫어요, 작성자, 댓글 내용 
+		댓글 삭제 버튼 -> 작성자와 로그인한 사람이 일치할때
+		
+		작성자, 작성일, 좋아요, 싫어요
+		댓글 내용
+		삭제버튼
+	 -->
+	 	<div class="comment" th:each="comment : ${commentList }">
+	 		<p>
+	 			<input type="hidden" name="cno" th:value="${comment.cno }"/>
+	 			<span>[[${comment.id }]]</span>
+	 			<span>작성일 : [[${comment.cdate }]]</span>
+	 			<span><a href="#" class="btn_comment_like">좋아요 : <span>[[${comment.clike }]]</span></a></span>
+	 			<span><a href="#" class="btn_comment_hate">싫어요 : <span>[[${comment.chate}]]</span></a></span>
+	 		</p>
+	 		<p>[[${comment.content }]]</p>
+	 			<a th:if="${session.user != null && session.user.id == comment.id }" href="@{/comment/delete/{cno}(cno=${comment.cno })}">댓글 삭제</a>
+	 	</div>
+    <a href="/main" class="btn">목록으로</a>
+	</div>
+</body>
+</html>

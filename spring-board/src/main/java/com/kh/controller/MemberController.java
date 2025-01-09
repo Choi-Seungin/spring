@@ -17,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.dto.BoardMemberDTO;
 import com.kh.service.BoardMemberService;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 //크로스 도메인 이슈 해결 방법
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -89,4 +91,24 @@ public class MemberController {
 	public List<BoardMemberDTO> memberList() {
 		return boardMemberService.selectAllMember();
 	}
+	
+	@ResponseBody
+	@PostMapping("/register")
+	public Map<String, Object> register(@RequestBody Map<String, String> body) {
+		Map<String, Object> map = new HashMap<>();
+		String id = body.get("id");
+		String password = body.get("password");
+		String username = body.get("username");
+		String nickname = body.get("nickname");
+		BoardMemberDTO dto = new BoardMemberDTO(id, password, username, nickname, 0);
+		int count = boardMemberService.insertMember(dto);
+		map.put("count", count);
+		if (count > 0) {
+			map.put("msg", id + "회원가입완료");
+		} else {
+			map.put("msg", id + "회원 가입 실패, 입력하신 데이터를 확인해주세요");
+		}
+		return map;
+	}
+	
 }

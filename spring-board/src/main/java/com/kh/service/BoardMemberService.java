@@ -53,4 +53,10 @@ public class BoardMemberService {
 		return mapper.updateColumnMember(map);
   }
 
+  public int insertMember(BoardMemberDTO dto) {
+		return mapper.insertMember(dto);
+  }
+
+  
+
 }
