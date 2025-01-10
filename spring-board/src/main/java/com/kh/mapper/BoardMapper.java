@@ -23,7 +23,7 @@ public interface BoardMapper {
 
 	int insertBoardComment(BoardCommentDTO dto);
 
-	List<BoardCommentDTO> getCommentList(int bno);
+	List<BoardCommentDTO> getCommentList(Map<String, Object> map);
 
 	int deleteBoard(int bno);
 
@@ -60,5 +60,9 @@ public interface BoardMapper {
 	int insertBoardCommentHate(Map<String, Object> map);
 
 	int selectBoardTotalCount();
+
+	int getBoardCommentLike(int cno);
+
+  int getBoardCommentHate(int cno);
 
 }

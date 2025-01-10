@@ -1,12 +1,16 @@
 package com.kh.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.dto.BoardDTO;
@@ -18,6 +22,7 @@ import com.kh.vo.PaggingVO;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
 public class HomeController {
 	private BoardService boardService;
@@ -52,22 +57,49 @@ public class HomeController {
 	}
 
 	@PostMapping("login")
-	public String login(String id, String password, HttpSession session, HttpServletResponse response) throws IOException {
+	public String login(String id, String password, HttpSession session, HttpServletResponse response)
+			throws IOException {
 		BoardMemberDTO user = boardMemberService.login(id, password);
 		System.out.println(user.getGrade());
-		if(user != null) {
+		if (user != null) {
 			session.setAttribute("user", user);
 			return "redirect:/main";
 		}
 		response.setContentType("text/html; charset=utf-8");
-		response.getWriter().println("<script>alert('로그인 실패 \\n아이디와 비밀번호 확인하세요');" +"history.back();</script>");
+		response.getWriter().println("<script>alert('로그인 실패 \\n아이디와 비밀번호 확인하세요');" + "history.back();</script>");
 		return null;
 	}
-	
+
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/login/view";
 	}
 
+	@ResponseBody
+	@GetMapping("/list")
+	public List<BoardMemberDTO> memberList() {
+		return boardMemberService.selectAllMember();
+	}
+
+	@ResponseBody
+	@GetMapping("/board")
+	public Map<String, Object> index(
+			@RequestParam(defaultValue = "1") int pageNo,
+			@RequestParam(defaultValue = "30") int pageContentEa) {
+
+		// 전체 게시글 개수 조회
+		int count = boardService.selectBoardTotalCount();
+		// 페이지 번호를 보내서 해당 페이지 게시글 목록만 조회
+		List<BoardDTO> list = boardService.getBoardList(pageNo, pageContentEa);
+		// PaggingVO 페이징 정보 생성
+		PaggingVO pagging = new PaggingVO(count, pageNo, pageContentEa);
+
+		// 결과를 Map에 담아서 반환
+		Map<String, Object> response = new HashMap<>();
+		response.put("list", list);
+		response.put("pagging", pagging);
+
+		return response;
+	}
 }
