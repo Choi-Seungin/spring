@@ -178,9 +178,35 @@ public class BoardController {
     return map;
   }
 
-  @GetMapping("/comment/delete/{bno}/{cno}")
-  public String boardCommentDelete(@PathVariable int bno, @PathVariable int cno) {
-    boardService.deleteBoardComment(cno);
-    return "redirect:/board/" + bno;
+  @GetMapping("/comment/delete/{cno}")
+  public String boardCommentDelete(@PathVariable int cno, HttpSession session ,HttpServletResponse response) {
+    BoardCommentDTO comment = boardService.selectBoardComment(cno);
+    if (session.getAttribute("user") != null && ((BoardMemberDTO) session.getAttribute("user")).getId().equals(comment.getId())) {
+      boardService.deleteBoardComment(cno);
+    }else{
+      response.setContentType("text/html; charset=utf-8");
+      try {
+        response.getWriter().println("<script>alert('해당 댓글 작성자만 삭제가 가능합니다.'); history.back();</script>");
+        return null;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    return "redirect:/board/" + comment.getBno();
+  }
+  @GetMapping("/delete/{bno}")
+  public String boardDelete(@PathVariable int bno, HttpSession session, HttpServletResponse response) {
+    if(session.getAttribute("user") != null && ((BoardMemberDTO)session.getAttribute("user")).getId().equals(boardService.selectBoard(bno).getId())) {
+      boardService.deleteBoard(bno);
+    }else{
+      response.setContentType("text/html; charset=utf-8");
+      try {
+        response.getWriter().println("<script>alert('해당 글 작성자만 삭제가 가능합니다.'); history.back();</script>");
+        return null;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    return "redirect:/main";
   }
 }

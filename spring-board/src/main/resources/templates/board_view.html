@@ -231,8 +231,10 @@
 	</style>
 	<script>
 		window.onload = () => {
-			//댓글 추가로 읽어오기
+			const userId = '[[${session.user != null ? session.user.id : ""}]]';
 			let commentCount = 6;
+
+			//댓글 추가로 읽어오기
 			document.querySelector('#btn_more').onclick = () => {
 				fetch(`/board/comment/[[${board.bno}]]?start=${commentCount}`)
 					.then(response => response.json())
@@ -248,9 +250,11 @@
 								<span>작성일 : ${item.cdate}</span>
 								<span><a href="#" class="btn_comment_like">좋아요 : <span>${item.clike}</span></a></span>
 								<span><a href="#" class="btn_comment_hate">싫어요 : <span>${item.chate}</span></a></span>
+								<span>
+									${userId == item.id ? '<button type="button" class="btn_comment_delete">댓글 삭제</button><button type="button" class="btn_comment_update">댓글 수정</button>' : ''}
+								</span>
 							</p>
 							<p>${item.content}</p>
-							<a href="@{/comment/delete/{cno}(cno=${item.cno})}">댓글 삭제</a>
 						</div>`;
 						});
 						document.querySelector('.comment_container').innerHTML += tag;
@@ -294,33 +298,40 @@
 			//댓글 좋아요
 			document.querySelector('.comment_container').onclick = (e) => {
 				//댓글 좋아요 싫어요 눌렀을때만 반응하게끔 처리
-				if (e.target.className != 'btn_comment_like' && e.target.className != 'btn_comment_hate') return;
-				console.log(e.target);
-				console.log(e.target.parentNode.parentNode.querySelector('input[name="cno"]').value);
-				let cno = e.target.parentNode.parentNode.querySelector('input[name="cno"]').value;
-				commentLikeHateAjax(e.target.className == 'btn_comment_like', cno, e.target);
-			};
+				if (e.target.className == 'btn_comment_like' && e.target.className == 'btn_comment_hate') {
+					console.log(e.target);
+					console.log(e.target.parentNode.parentNode.querySelector('input[name="cno"]').value);
+					let cno = e.target.parentNode.parentNode.querySelector('input[name="cno"]').value;
+					commentLikeHateAjax(e.target.className == 'btn_comment_like', cno, e.target);
+				}
+				if(e.target.className == 'btn_comment_delete'){
+					console.log(e.target);
+					location.href = `/board/comment/delete/${e.target.parentNode.parentNode.querySelector('input[name="cno"]').value}`;
+				}
+				if(e.target.className == 'btn_comment_update'){
+					console.log(e.target);
+				}
 
+			}
 		}
-
-		function commentLikeHateAjax(mode, cno, target) {
-			let url = `/board/comment/${mode ? "like" : "hate"}/${cno}`;
-			console.log(url);
-			//ajax 호출
-			fetch(url)
-				.then(response => response.json())
-				.then(result => {
-					console.log(result);
-					if (result.code == 2) {
-						if (confirm(result.msg)) location.href = '/login/view';
-						return;
-					}
-					alert(result.msg);
-					target.querySelector('span').innerHTML = result.count;
-				}).catch(error => {
-					console.log(error);
-				});
-		}
+			function commentLikeHateAjax(mode, cno, target) {
+				let url = `/board/comment/${mode ? "like" : "hate"}/${cno}`;
+				console.log(url);
+				//ajax 호출
+				fetch(url)
+					.then(response => response.json())
+					.then(result => {
+						console.log(result);
+						if (result.code == 2) {
+							if (confirm(result.msg)) location.href = '/login/view';
+							return;
+						}
+						alert(result.msg);
+						target.querySelector('span').innerHTML = result.count;
+					}).catch(error => {
+						console.log(error);
+					});
+			}
 
 	</script>
 </head>
@@ -362,27 +373,20 @@
 			<!-- 
 			해당 글을 쓴 작성자에게만 수정, 삭제 버튼이 나오게끔 처리
 		 -->
-			<!-- <c:if test="${sessionScope.user.boardMemberId == board.boardMemberId }">
-		 <tr>
-			 <td colspan="2">
-			 	<button id="btn_update">수정</button>
-			 	<button id="btn_delete">삭제</button>
-			 	<script>
-			 		document.querySelector("#btn_update").onclick = () =>{
-			 			location.href='./boardUpdateView.do?bno=${board.boardNo}';
-			 		}
-			 		document.querySelector("#btn_delete").onclick = () =>{
-			 			location.href='./boardDelete.do?bno=${board.boardNo}';
-			 		}
-			 	</script>
-			 </td>
-	 	</tr>
-		 </c:if> -->
-
-			<tr>
-
+			<tr th:if="${session.user != null && session.user.Id == board.Id}">
+				<td colspan="2">
+					<button id="btn_update">수정</button>
+					<button id="btn_delete">삭제</button>
+					<script>
+							document.querySelector("#btn_update").onclick = () => {
+								location.href = '/board/update/view?bno=[[${board.bno}]]';
+							}
+							document.querySelector("#btn_delete").onclick = () => {
+								location.href = '/board/delete/[[${board.bno}]]';
+							}
+					</script>
+				</td>
 			</tr>
-
 			<tr>
 				<td colspan="2">
 					<!-- 댓글 입력 폼 -->
@@ -416,11 +420,11 @@
 					<span>작성일 : [[${comment.cdate }]]</span>
 					<span><a href="#" class="btn_comment_like">좋아요 : <span>[[${comment.clike }]]</span></a></span>
 					<span><a href="#" class="btn_comment_hate">싫어요 : <span>[[${comment.chate}]]</span></a></span>
+					<span th:if="${session.user != null && session.user.id == comment.id}"><button type="button"
+							class="btn_comment_delete">댓글 삭제</button><button type="button" class="btn_comment_update">댓글
+							수정</button></span>
 				</p>
 				<p>[[${comment.content }]]</p>
-				<a th:if="${session.user != null && session.user.id == comment.id }"
-           th:href="@{/board/comment/delete/{bno}/{cno}(bno=${board.bno}, cno=${comment.cno})}"
-           class="delete_comment">댓글 삭제</a>
 			</div>
 		</div>
 		<button type="button" id="btn_more">댓글 더보기</button>

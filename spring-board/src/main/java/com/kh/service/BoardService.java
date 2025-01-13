@@ -151,4 +151,8 @@ public class BoardService {
 		return mapper.getBoardCommentHate(cno);
 	}
 
+	public BoardCommentDTO selectBoardComment(int cno) {
+		return mapper.selectBoardComment(cno);
+	}
+
 }
