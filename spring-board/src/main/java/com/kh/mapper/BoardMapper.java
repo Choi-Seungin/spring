@@ -65,6 +65,6 @@ public interface BoardMapper {
 
   int getBoardCommentHate(int cno);
 
-  BoardCommentDTO selectBoardComment(int cno);
+  BoardCommentDTO selectComment(int cno);
 
 }
