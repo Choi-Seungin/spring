@@ -38,7 +38,9 @@
 		<li th:if="${session.user == null}"><a href="/login/view">로그인</a></li>
 		<!-- 회원 관리 메뉴 추가 /admin/member 관리자 일때만 -->
 		<li th:if="${session.user != null && session.user.grade == 5}"><a href="/member/main">회원 관리</a></li>
+		<li th:if="${session.user != null && session.user.grade == 5}"><a href="/member/grade/main">회원 등급 관리</a></li>
 		<!-- 로그인을 한 상태면 로그아웃, 회원명 님 로그인 -->
+		<li th:if="${session.user != null}"><a href="/board/write/view">글쓰기</a></li>
 		<li th:if="${session.user != null}"><a href="/">[[${session.user.nickName}]]</a>님 로그인</li>
 		<li th:if="${session.user != null}"><a href="/logout">로그아웃</a></li>
 	</ul>

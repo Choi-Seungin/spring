@@ -1,113 +1,56 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>메인</title>
-<style>
-/* Global Styles */
-body {
-	font-family: Arial, sans-serif;
-	background-color: #ffffff;
-}
-
-/* Login Message Styles */
-p {
-	font-size: 18px;
-	margin-bottom: 10px;
-	text-align: center;
-}
-
-/* Table Styles */
-h3 {
-	text-align: center;
-}
-
-table {
-	width: 70%;
-	margin: 0 auto;
-	border-collapse: collapse;
-	margin-bottom: 20px;
-}
-
-th, td {
-	border: 1px solid #eeeeee;
-	padding: 5px;
-	text-align: center;
-}
-
-th {
-	background-color: #f7f7f7;
-}
-
-/* Link Styles */
-a {
-	text-decoration: none;
-	color: #999999;
-}
-
-a:hover {
-	color: #bbbbbb;
-}
-
-/* Button Styles */
-.btn {
-	background-color: #eeeeee;
-	color: #999999;
-	padding: 5px 10px;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	font-size: 12px;
-	line-height: 1;
-}
-
-.btn:hover {
-	background-color: #f7f7f7;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-	<th:block th:include="/fragments/header.html"></th:block>
-	<!-- 전체 회원 목록 출력 -->
-	<div class="container">
-		<h3>게시판</h3>
-		<table>
-			<thead>
-				<th>글번호</th>
-				<th>닉네임</th>
-				<th>제목</th>
-				<th>작성일</th>
-				<th>조회수</th>
-				<th>좋아요</th>
-				<th>싫어요</th>
-			</thead>
-			<tbody>
-				<tr th:each="board : ${list}">
-					<td>[[${board.bno}]]</td>
-					<td>[[${board.nickName}]]</td>
-					<td><a th:href="@{/board/{bno}(bno=${board.bno})}">[[${board.title}]]</a></td>
-					<td>[[${board.writeDate}]]</td>
-					<td>[[${board.bcount}]]</td>
-					<td>[[${board.blike}]]</td>
-					<td>[[${board.bhate}]]</td>
-				</tr>
-			</tbody>
-			<tfoot>
-			    <tr>
-			        <td colspan="7">
-			            <div class="pagination">
-			                <!-- 이전 페이지 그룹 버튼 -->
-			                <a th:if="${pagging.priviousPageGroup}" th:href="@{/main(pageNo=${pagging.startPageOfPageGroup-1}, pageContentEa=${pagging.pageOfContentCount})}">◀</a>
-			                <!-- 페이지 번호 반복 -->
-            				<a th:href="@{/main(pageNo=${i},pageContentEa=${pagging.pageOfContentCount})}" th:each="i : ${#numbers.sequence(pagging.startPageOfPageGroup,pagging.endPageOfPageGroup)}">[[${i}]]</a>
-			                <!-- 다음 페이지 그룹 버튼 -->
-			                <a th:if="${pagging.nextPageGroup}" th:href="@{/main(pageNo=${pagging.endPageOfPageGroup+1}, pageContentEa=${pagging.pageOfContentCount})}">▶</a>
-			            </div>
-			        </td>
-			    </tr>
-			</tfoot>
-		</table>
-	</div>
+  <th:block th:include="/fragments/header.html"></th:block>
+  <hr>
+  <div class="container">
+    <!-- 게시판 글 목록 출력 -->
+     <h2>게시글 목록</h2>
+     <table class="board-table">
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>제목</th>
+          <th>작성자</th>
+          <th>작성일</th>
+          <th>조회수</th>
+          <th>좋아요</th>
+          <th>싫어요</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="board : ${list}">
+          <td>[[${board.bno}]]</td>
+          <td><a th:href="@{/board/{bno}(bno=${board.bno})}">[[${board.title}]]</a></td>
+          <td>[[${board.id}]]</td>
+          <td>[[${board.writeDate}]]</td>
+          <td>[[${board.bcount}]]</td>
+          <td>[[${board.blike}]]</td>
+          <td>[[${board.bhate}]]</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="7">
+						<a href="/board/write/view">글쓰기</a>
+            <!-- 이전 페이지 그룹 이동 -->
+            <a th:if="${pagging.priviousPageGroup}" th:href="@{/main(pageNo=${pagging.startPageOfPageGroup-1},pageContentEa=${pagging.pageOfContentCount})}">◀</a>
+            <!-- 페이지 번호 출력 -->
+            <a th:href="@{/main(pageNo=${i},pageContentEa=${pagging.pageOfContentCount})}" th:each="i : ${#numbers.sequence(pagging.startPageOfPageGroup,pagging.endPageOfPageGroup)}">[[${i}]]</a>
+            <!-- 다음 페이지 그룹 이동 -->
+            <a th:if="${pagging.nextPageGroup}" th:href="@{/main(pageNo=${pagging.endPageOfPageGroup+1},pageContentEa=${pagging.pageOfContentCount})}">▶</a>
+
+          </td>
+        </tr>
+
+      </tfoot>
+    </table>
+  </div>
 </body>
 </html>

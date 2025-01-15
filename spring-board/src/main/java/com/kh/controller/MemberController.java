@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.dto.BoardGradeDTO;
 import com.kh.dto.BoardMemberDTO;
 import com.kh.service.BoardMemberService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 //크로스 도메인 이슈 해결 방법
@@ -110,5 +113,14 @@ public class MemberController {
 		}
 		return map;
 	}
+
+	@GetMapping("/grade/main")
+	public ModelAndView gradMain(ModelAndView view) {
+		List<BoardMemberDTO> gradeList = boardMemberService.getBoardGradeList();
+		view.addObject("gradeList", gradeList);
+		view.setViewName("admin_grade_main");
+		return view;
+	}
+	
 	
 }
