@@ -30,7 +30,7 @@ public class JwtTokenProvider {
 	}
 	//토큰에 저장된 로그인 id값 꺼내서 반환
 	public String getUserIDFromToken(String token) {
-		return (String) getClaims(token).get("userId");
+		return (String) getClaims(token).getSubject();
 	}
 	//토큰에 저장된 권한에 관련된 값 꺼내서 반환
 	public String getRoleFromToken(String token) {
